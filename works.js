@@ -7,6 +7,6 @@ window.LLONE_WORKS = [
   { chapter: 'digital-art', title: 'Veil', series: 'Liquid Chrome I', year: 2026, meta: '2:3 · 3600×5400', image_url: 'assets/art/veil-web.jpg', aspect: '2/3', sort: 40 },
   { chapter: 'digital-art', title: 'Ember', series: 'Liquid Chrome I', year: 2026, meta: '1:1 · 4000×4000', image_url: 'assets/art/ember-web.jpg', aspect: '1/1', sort: 50 },
   { chapter: 'digital-art', title: 'Obsidian', series: 'Liquid Chrome I', year: 2026, meta: '4:5 · 4000×5000', image_url: 'assets/art/obsidian-web.jpg', aspect: '4/5', sort: 60 },
-  // { chapter: 'films', title: 'Liquid Chrome, in Motion', series: 'Liquid Chrome I', year: 2026, meta: 'Loop · 4K · 0:10', image_url: 'assets/art/chrome-4k-poster.jpg', video_url: 'assets/art/chrome-4k.mp4', aspect: '16/9', sort: 10 },
+  { chapter: 'films', title: 'Liquid Chrome, in Motion', series: 'Liquid Chrome I', year: 2026, meta: 'Loop · 4K · 0:10', image_url: 'assets/art/chrome-4k-poster.jpg', video_url: 'assets/art/chrome-4k.mp4', aspect: '16/9', sort: 10 },
   { chapter: 'films', title: 'Argent Reel', series: 'Liquid Chrome I', year: 2026, meta: 'Reel · 9:16 · 0:08', image_url: 'assets/art/loop-reel-poster.jpg', video_url: 'assets/art/loop-reel.mp4', aspect: '9/16', sort: 20 },
 ];
