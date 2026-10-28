@@ -16,9 +16,8 @@
 
   var ac = null, out = null, verb = null, strings = {};
   function initAudio(){
-    if(ac){ if(ac.state === 'suspended') ac.resume(); return; }
-    var AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
-    ac = new AC();
+    if(ac){ window.LLONE_AUDIO(); return; }
+    ac = window.LLONE_AUDIO ? window.LLONE_AUDIO() : null; if(!ac) return;
     out = ac.createGain(); out.gain.value = .8;
     var comp = ac.createDynamicsCompressor(); comp.threshold.value = -12; comp.ratio.value = 3;
     verb = ac.createConvolver();

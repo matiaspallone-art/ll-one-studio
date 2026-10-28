@@ -16,9 +16,8 @@
 
   var ac = null, master = null, reverb = null;
   function initAudio(){
-    if(ac) { if(ac.state==='suspended') ac.resume(); return; }
-    var AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
-    ac = new AC();
+    if(ac) { window.LLONE_AUDIO(); return; }
+    ac = window.LLONE_AUDIO ? window.LLONE_AUDIO() : null; if(!ac) return;
     master = ac.createGain(); master.gain.value = .55;
     var comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
     // synthetic hall: decaying stereo noise as impulse response
