@@ -1,4 +1,4 @@
-// LL·ONE Studio — gallery, lightbox, contact form and the liquid-chrome hero.
+// II — ONE — gallery, lightbox, contact form and the liquid-chrome hero.
 (function(){
   var CFG = window.LLONE_CONFIG || {};
   var API = CFG.supabaseUrl + '/rest/v1/';

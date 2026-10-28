@@ -1,4 +1,4 @@
-# LL·ONE Studio
+# II — ONE
 
 Web en inglés de arte digital, fotografía realista, editoriales de moda y videos cortos hechos con IA.
 
