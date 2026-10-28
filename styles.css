@@ -227,8 +227,8 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 /* Chapter V: the instrument */
 .instrument{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#3a3d45 0%,#15161b 55%,var(--night) 85%);border:1px solid var(--line)}
 @media (max-width:700px){.instrument{aspect-ratio:3/4}}
-#instrument{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
-#instrument:focus-visible{outline:1px solid var(--gilt);outline-offset:-1px}
+#instrument,#ink{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
+#instrument:focus-visible,#ink:focus-visible{outline:1px solid var(--gilt);outline-offset:-1px}
 .inst-hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;transition:opacity .8s}
 .inst-hint .label{padding:.7rem 1.1rem;border:1px solid color-mix(in srgb,var(--ivory) 45%,transparent);color:var(--ivory);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:color-mix(in srgb,var(--night) 35%,transparent)}
 .inst-hint.gone{opacity:0}
@@ -237,3 +237,10 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 .inst-note.show{animation:note 1.4s ease-out forwards}
 @keyframes note{0%{opacity:0;transform:translate(-50%,-120%)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%)}}
 @media (prefers-reduced-motion:reduce){.inst-note.show{animation:none;opacity:1}}
+
+/* Chapter VI: ink bowl on rice paper */
+.ink-bowl{background:#f6f2ea}
+.ink-bowl .inst-scale{color:rgba(40,30,20,.6)}
+.ink-bowl .inst-hint .label{color:#2a211a;border-color:rgba(40,30,20,.35);background:rgba(246,242,234,.55)}
+.ink-bowl .inst-note{text-shadow:0 1px 10px rgba(246,242,234,.9)}
+.ink-fallback{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:var(--s2);text-align:center;color:#2a211a}

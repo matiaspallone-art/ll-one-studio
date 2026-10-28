@@ -25,6 +25,7 @@
         <li><a href="#editorial">Editorial</a></li>
         <li><a href="#films">Films</a></li>
         <li><a href="#play">Play</a></li>
+        <li><a href="#ink-play">Ink</a></li>
         <li><a href="#studio">Studio</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -44,7 +45,7 @@
         <a class="btn ghost" href="#contact">Commission a story</a>
       </div>
       <div class="hero-meta">
-        <div><span class="label">Chapters</span><b>5</b></div>
+        <div><span class="label">Chapters</span><b>6</b></div>
         <div><span class="label">Latest series</span><b>Liquid Chrome</b></div>
         <div><span class="label">Open for</span><b>Commissions 2027</b></div>
       </div>
@@ -133,6 +134,25 @@
     </div>
   </section>
 
+  <section class="chapter" id="ink-play">
+    <div class="wrap">
+      <div class="ch-head">
+        <div>
+          <span class="ch-num">Chapter VI</span>
+          <h2>Interactive <i>/</i> Ink &amp; Silk</h2>
+        </div>
+        <p>Three drops of ink in water, red, yellow and blue, played like a guzheng. Every touch plucks a string and lets fall the next primary; where the inks meet they mix like paint, into orange, green and violet, and further into the tertiaries. Drag to stir. Touch the upper third to bend the string.</p>
+      </div>
+      <div class="instrument ink-bowl">
+        <canvas id="ink" tabindex="0" aria-label="Interactive ink instrument. Tap or drag to drop ink and play notes; keys A to semicolon also play."></canvas>
+        <span class="inst-note" id="ink-note" aria-hidden="true"></span>
+        <div class="inst-hint" id="ink-hint"><span class="label">Tap anywhere · sound on</span></div>
+        <p class="ink-fallback" id="ink-fallback" hidden>This piece needs a browser with WebGL 2. Try the latest Safari, Chrome or Firefox.</p>
+        <div class="inst-scale" aria-hidden="true"><span>D3</span><span>Gong mode · Chinese pentatonic</span><span>D6</span></div>
+      </div>
+    </div>
+  </section>
+
   <section class="process" aria-labelledby="process-title">
     <div class="wrap">
       <span class="label">How a piece is made</span>
@@ -206,5 +226,6 @@
 <script src="works.js"></script>
 <script src="app.js"></script>
 <script src="interactive.js"></script>
+<script src="ink.js"></script>
 </body>
 </html>
