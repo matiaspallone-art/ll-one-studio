@@ -1,6 +1,12 @@
 // Copia local de las obras. La web usa primero las obras de Supabase;
 // si Supabase no responde, muestra estas para que la galería nunca quede vacía.
 window.LLONE_WORKS = [
+  { chapter: 'digital-art', title: 'Pampa', series: 'Quiet Latitudes', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/art/quiet-latitudes-pampa.jpg', aspect: '16/9', sort: 110 },
+  { chapter: 'digital-art', title: 'Salinas', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-salinas.jpg', aspect: '4/5', sort: 120 },
+  { chapter: 'digital-art', title: 'Humahuaca', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-humahuaca.jpg', aspect: '4/5', sort: 130 },
+  { chapter: 'digital-art', title: 'Glaciar', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-glaciar.jpg', aspect: '4/5', sort: 140 },
+  { chapter: 'digital-art', title: 'Iguazú', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-iguazu.jpg', aspect: '4/5', sort: 150 },
+  { chapter: 'digital-art', title: 'Patagonia', series: 'Quiet Latitudes', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/art/quiet-latitudes-patagonia.jpg', aspect: '16/9', sort: 160 },
   { chapter: 'architecture', title: 'Exterior', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-exterior.jpg', aspect: '16/9', sort: 10 },
   { chapter: 'architecture', title: 'Living', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-living.jpg', aspect: '16/9', sort: 20 },
   { chapter: 'architecture', title: 'Kitchen', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-kitchen.jpg', aspect: '16/9', sort: 30 },
