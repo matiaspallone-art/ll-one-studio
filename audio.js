@@ -1,65 +1,64 @@
-// One shared AudioContext for both instruments, started the way phones need it:
-// - audio may only start inside a real tap (touchend / click), so every tap retries;
-// - on iPhone the side silent switch mutes Web Audio, so before the context exists we start a silent
-//   <audio> loop and ask for the "playback" audio session, which makes the page sound like a video does;
-// - each instrument shows a sound button whose label always tells the real state.
+// Sound for both instruments, played as ordinary media files (assets/sound/*.mp3).
+// Media files are the most compatible way to make sound on the web: they play on iPhone with the silent
+// switch on, on Android and on desktop. Phones only allow a media element to play after a real tap, so
+// the first tap anywhere "unlocks" a small pool of players that every note then reuses.
 (function(){
-  var ac = null, tag = null, muted = false;
+  var POOL = 12, pool = [], next = 0, unlocked = false, muted = false;
+  var urls = {};     // note name -> blob URL once preloaded
+  var SILENT = 'assets/sound/silence.mp3';
 
-  function silentWav(){
-    var n = 4000, b = new Uint8Array(44 + n), v = new DataView(b.buffer);
-    function s(o, t){ for(var i=0;i<t.length;i++) b[o+i] = t.charCodeAt(i); }
-    s(0,'RIFF'); v.setUint32(4, 36+n, true); s(8,'WAVEfmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
-    v.setUint32(24,8000,true); v.setUint32(28,8000,true); v.setUint16(32,1,true); v.setUint16(34,8,true); s(36,'data'); v.setUint32(40,n,true);
-    for(var i=0;i<n;i++) b[44+i] = 128;
-    var bin = ''; for(var j=0;j<b.length;j++) bin += String.fromCharCode(b[j]);
-    return 'data:audio/wav;base64,' + btoa(bin);
+  function player(){
+    var a = document.createElement('audio');
+    a.setAttribute('playsinline', ''); a.setAttribute('webkit-playsinline', '');
+    a.preload = 'auto';
+    return a;
   }
-
   function label(){
-    var on = ac && ac.state === 'running' && !muted;
     document.querySelectorAll('[data-sound]').forEach(function(b){
-      b.textContent = on ? 'Sound on' : (muted ? 'Sound off' : 'Tap for sound');
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.textContent = muted ? 'Sound off' : (unlocked ? 'Sound on' : 'Tap for sound');
+      b.setAttribute('aria-pressed', unlocked && !muted ? 'true' : 'false');
+    });
+  }
+  // must run inside a tap
+  function unlock(){
+    if(unlocked) return;
+    for(var i=0;i<POOL;i++){
+      var a = pool[i] || (pool[i] = player());
+      a.src = SILENT;
+      var p = a.play(); if(p && p.catch) p.catch(function(){});
+    }
+    unlocked = true; label();
+    document.querySelectorAll('.inst-hint').forEach(function(h){ h.classList.add('gone'); });
+  }
+  ['touchend', 'click', 'keydown', 'pointerup'].forEach(function(ev){
+    document.addEventListener(ev, function(e){ if(!(e.target.closest && e.target.closest('[data-sound]'))) unlock(); }, true);
+  });
+
+  function preload(names){
+    names.forEach(function(n){
+      if(urls[n]) return; urls[n] = 'assets/sound/' + n + '.mp3';
+      fetch(urls[n]).then(function(r){ return r.ok ? r.blob() : null; })
+        .then(function(b){ if(b) urls[n] = URL.createObjectURL(b); }).catch(function(){});
     });
   }
 
-  // must run synchronously inside a user gesture
-  function start(){
-    if(muted) return ac;
-    try{ if(navigator.audioSession) navigator.audioSession.type = 'playback'; }catch(e){}
-    if(!tag){
-      tag = document.createElement('audio');
-      tag.setAttribute('playsinline', ''); tag.setAttribute('webkit-playsinline', '');
-      tag.loop = true; tag.src = silentWav();
-    }
-    if(tag.paused){ var p = tag.play(); if(p && p.catch) p.catch(function(){}); }
-    if(!ac){
-      var AC = window.AudioContext || window.webkitAudioContext; if(!AC) return null;
-      ac = new AC();
-      ac.onstatechange = label;
-    }
-    if(ac.state !== 'running'){ var r = ac.resume(); if(r && r.then) r.then(label, label); }
-    try{ var src = ac.createBufferSource(); src.buffer = ac.createBuffer(1, 1, ac.sampleRate); src.connect(ac.destination); src.start(0); }catch(e){}
-    label();
-    return ac;
+  function play(name){
+    if(muted) return;
+    if(!unlocked) unlock();
+    var a = pool[next++ % POOL] || player();
+    try{ a.pause(); }catch(e){}
+    a.src = urls[name] || ('assets/sound/' + name + '.mp3');
+    try{ a.currentTime = 0; }catch(e){}
+    var p = a.play(); if(p && p.catch) p.catch(function(){});
   }
-
-  ['touchend', 'click', 'keydown'].forEach(function(ev){
-    document.addEventListener(ev, function(e){
-      if(ac && !muted && ac.state !== 'running') start();
-    }, true);
-  });
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden && ac && !muted && ac.state !== 'running') ac.resume(); });
 
   document.addEventListener('click', function(e){
     var b = e.target.closest && e.target.closest('[data-sound]'); if(!b) return;
-    if(ac && ac.state === 'running' && !muted){ muted = true; ac.suspend(); if(tag) tag.pause(); label(); return; }
-    muted = false; start();
-    document.querySelectorAll('.inst-hint').forEach(function(h){ h.classList.add('gone'); });
+    if(unlocked && !muted){ muted = true; pool.forEach(function(a){ try{ a.pause(); }catch(err){} }); }
+    else { muted = false; unlock(); }
+    label();
   });
-  document.addEventListener('DOMContentLoaded', label);
-  label();
+  label(); document.addEventListener('DOMContentLoaded', label);
 
-  window.LLONE_AUDIO = start;
+  window.LLONE_SOUND = { play: play, unlock: unlock, preload: preload };
 })();

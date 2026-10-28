@@ -1,5 +1,5 @@
 // Chapter V — "Play the Chrome": a liquid-metal surface that is also an instrument.
-// Every touch plays a note (Web Audio, metallic FM bell) and opens a ripple in the chrome (WebGL).
+// Every touch plays a note (a pre-rendered metallic bell from assets/sound) and opens a ripple in the chrome (WebGL).
 (function(){
   var canvas = document.getElementById('instrument');
   if(!canvas) return;
@@ -14,49 +14,9 @@
   for(var o=0;o<3;o++) for(var k=0;k<5;k++) notes.push({ name: NAMES[k] + (3+o), midi: 50 + o*12 + SEMI[k] });
   notes.push({ name:'D6', midi:86 });
 
-  var ac = null, master = null, reverb = null;
-  function initAudio(){
-    if(ac) { window.LLONE_AUDIO(); return; }
-    ac = window.LLONE_AUDIO ? window.LLONE_AUDIO() : null; if(!ac) return;
-    master = ac.createGain(); master.gain.value = .55;
-    var comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
-    // synthetic hall: decaying stereo noise as impulse response
-    reverb = ac.createConvolver();
-    var len = ac.sampleRate * 3.2, ir = ac.createBuffer(2, len, ac.sampleRate);
-    for(var ch=0;ch<2;ch++){ var d = ir.getChannelData(ch); for(var i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 3.2); }
-    reverb.buffer = ir;
-    var wet = ac.createGain(); wet.gain.value = .42;
-    master.connect(comp); reverb.connect(wet); wet.connect(comp); comp.connect(ac.destination);
-  }
-
-  // metallic bell: carrier + inharmonic FM modulator, with a soft sine body underneath
-  function play(midi, bright, x){
-    if(!ac) return;
-    var t = ac.currentTime, f = 440 * Math.pow(2, (midi-69)/12);
-    var out = ac.createGain(); out.gain.setValueAtTime(0, t);
-    out.gain.linearRampToValueAtTime(.32, t + .006);
-    out.gain.exponentialRampToValueAtTime(.0008, t + 2.8 + bright*1.4);
-    var pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
-    if(pan){ pan.pan.value = (x*2-1)*.7; out.connect(pan); pan.connect(master); pan.connect(reverb); }
-    else { out.connect(master); out.connect(reverb); }
-
-    var car = ac.createOscillator(); car.frequency.value = f;
-    var mod = ac.createOscillator(); mod.frequency.value = f * 3.507;
-    var idx = ac.createGain();
-    idx.gain.setValueAtTime(f * (1.2 + bright*2.4), t);
-    idx.gain.exponentialRampToValueAtTime(f * .02, t + 1.6);
-    mod.connect(idx); idx.connect(car.frequency); car.connect(out);
-
-    var body = ac.createOscillator(); body.type = 'sine'; body.frequency.value = f;
-    var bg = ac.createGain(); bg.gain.value = .5; body.connect(bg); bg.connect(out);
-
-    var shimmer = ac.createOscillator(); shimmer.frequency.value = f * 2.756;
-    var sg = ac.createGain(); sg.gain.setValueAtTime(.12*bright, t); sg.gain.exponentialRampToValueAtTime(.0005, t + .9);
-    shimmer.connect(sg); sg.connect(out);
-
-    var end = t + 4.5;
-    [car, mod, body, shimmer].forEach(function(o){ o.start(t); o.stop(end); });
-  }
+  function initAudio(){ if(window.LLONE_SOUND) LLONE_SOUND.unlock(); }
+  function play(midi, bright){ if(window.LLONE_SOUND) LLONE_SOUND.play('chrome-' + midi + '-' + (bright > .5 ? 'bright' : 'soft')); }
+  if(window.LLONE_SOUND) LLONE_SOUND.preload(notes.reduce(function(a, n){ return a.concat(['chrome-'+n.midi+'-soft', 'chrome-'+n.midi+'-bright']); }, []));
 
   // ---------- picture ----------
   var gl = canvas.getContext('webgl', { antialias:false, premultipliedAlpha:false, powerPreference:'high-performance' });

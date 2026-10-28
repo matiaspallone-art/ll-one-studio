@@ -1,7 +1,7 @@
 // Chapter VI — "Ink & Silk": primary inks in water that mix like real paint, played like a guzheng.
 // Fluid: stable-fluids solver on the GPU (WebGL2). Ink is stored as amounts of red, yellow and blue pigment
 // and shown through an RYB colour cube, so red + yellow becomes orange, yellow + blue green, blue + red violet.
-// Sound: Karplus-Strong plucked strings tuned to the Chinese pentatonic (gong mode), with a guzheng-style bend.
+// Sound: Karplus-Strong plucked strings (pre-rendered to assets/sound) in the Chinese pentatonic, with a guzheng-style bend.
 (function(){
   var canvas = document.getElementById('ink');
   if(!canvas) return;
@@ -14,54 +14,9 @@
   for(var o=0;o<3;o++) for(var k=0;k<5;k++) notes.push({ name: NAMES[k]+(3+o), midi: 50 + o*12 + SEMI[k] });
   notes.push({ name:'D6', midi:86 });
 
-  var ac = null, out = null, verb = null, strings = {};
-  function initAudio(){
-    if(ac){ window.LLONE_AUDIO(); return; }
-    ac = window.LLONE_AUDIO ? window.LLONE_AUDIO() : null; if(!ac) return;
-    out = ac.createGain(); out.gain.value = .8;
-    var comp = ac.createDynamicsCompressor(); comp.threshold.value = -12; comp.ratio.value = 3;
-    verb = ac.createConvolver();
-    var len = ac.sampleRate * 4, ir = ac.createBuffer(2, len, ac.sampleRate);
-    for(var c=0;c<2;c++){ var d = ir.getChannelData(c); for(var i=0;i<len;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/len, 4); }
-    verb.buffer = ir;
-    var wet = ac.createGain(); wet.gain.value = .35;
-    out.connect(comp); verb.connect(wet); wet.connect(comp); comp.connect(ac.destination);
-  }
-
-  // one plucked string per note, rendered once and reused
-  function stringFor(midi){
-    if(strings[midi]) return strings[midi];
-    var sr = ac.sampleRate, f = 440 * Math.pow(2, (midi-69)/12);
-    var L = Math.max(2, Math.round(sr / f - .5));
-    var n = Math.floor(sr * 3.6), buf = ac.createBuffer(1, n, sr), y = buf.getChannelData(0);
-    var decay = .9985 - Math.max(0, midi-62) * .00012;      // higher strings ring shorter, like a real guzheng
-    var lp = 0;
-    for(var i=0;i<L;i++){ lp = lp*.45 + (Math.random()*2-1)*.55; y[i] = lp; }   // softened noise: a fingertip, not a pick
-    for(var j=L;j<n;j++) y[j] = decay * .5 * (y[j-L] + y[j-L-1]);
-    var peak = 0; for(var m=0;m<n;m++) peak = Math.max(peak, Math.abs(y[m]));
-    for(var q=0;q<n;q++) y[q] /= peak || 1;
-    strings[midi] = { buf: buf, rate: f / (sr / (L + .5)) };   // correct the tuning of the integer delay line
-    return strings[midi];
-  }
-
-  function pluck(midi, bend, x){
-    if(!ac) return;
-    var s = stringFor(midi), t = ac.currentTime;
-    var src = ac.createBufferSource(); src.buffer = s.buf;
-    src.playbackRate.setValueAtTime(s.rate, t);
-    if(bend){                                                 // press the string behind the bridge: rise a tone and settle
-      src.playbackRate.setValueAtTime(s.rate, t + .12);
-      src.playbackRate.linearRampToValueAtTime(s.rate * Math.pow(2, 2/12), t + .38);
-      src.playbackRate.linearRampToValueAtTime(s.rate * Math.pow(2, 1.6/12), t + 1.2);
-    }
-    var g = ac.createGain(); g.gain.value = .55;
-    var body = ac.createBiquadFilter(); body.type = 'peaking'; body.frequency.value = 520; body.Q.value = 1.2; body.gain.value = 4;
-    src.connect(body); body.connect(g);
-    var pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
-    if(pan){ pan.pan.value = (x*2-1)*.75; g.connect(pan); pan.connect(out); pan.connect(verb); }
-    else { g.connect(out); g.connect(verb); }
-    src.start(t); src.stop(t + 3.6);
-  }
+  function initAudio(){ if(window.LLONE_SOUND) LLONE_SOUND.unlock(); }
+  function pluck(midi, bend){ if(window.LLONE_SOUND) LLONE_SOUND.play('ink-' + midi + '-' + (bend ? 'bend' : 'plain')); }
+  if(window.LLONE_SOUND) LLONE_SOUND.preload(notes.reduce(function(a, n){ return a.concat(['ink-'+n.midi+'-plain', 'ink-'+n.midi+'-bend']); }, []));
 
   // ---------- fluid ----------
   var gl = canvas.getContext('webgl2', { alpha:false, depth:false, stencil:false, antialias:false, preserveDrawingBuffer:false });
