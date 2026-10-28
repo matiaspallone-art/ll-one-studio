@@ -220,3 +220,17 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 .reel.justified .row{display:flex;gap:var(--s1);align-items:flex-start}
 .reel.justified .frame{min-width:0}
 @media (max-width:640px){.reel.justified .row{flex-direction:column;gap:var(--s2)}.reel.justified .frame{flex:none!important;width:100%}}
+
+/* Chapter V: the instrument */
+.instrument{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#3a3d45 0%,#15161b 55%,var(--night) 85%);border:1px solid var(--line)}
+@media (max-width:700px){.instrument{aspect-ratio:3/4}}
+#instrument{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
+#instrument:focus-visible{outline:1px solid var(--gilt);outline-offset:-1px}
+.inst-hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;transition:opacity .8s}
+.inst-hint .label{padding:.7rem 1.1rem;border:1px solid color-mix(in srgb,var(--ivory) 45%,transparent);color:var(--ivory);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:color-mix(in srgb,var(--night) 35%,transparent)}
+.inst-hint.gone{opacity:0}
+.inst-scale{position:absolute;left:.9rem;right:.9rem;bottom:.7rem;display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--ivory) 70%,transparent);pointer-events:none}
+.inst-note{position:absolute;transform:translate(-50%,-160%);font-family:var(--f-display);font-style:italic;font-size:1.6rem;color:var(--ivory);text-shadow:0 1px 12px rgba(0,0,0,.6);pointer-events:none;opacity:0}
+.inst-note.show{animation:note 1.4s ease-out forwards}
+@keyframes note{0%{opacity:0;transform:translate(-50%,-120%)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%)}}
+@media (prefers-reduced-motion:reduce){.inst-note.show{animation:none;opacity:1}}

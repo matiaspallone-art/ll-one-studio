@@ -24,6 +24,7 @@
         <li><a href="#photography">Photography</a></li>
         <li><a href="#editorial">Editorial</a></li>
         <li><a href="#films">Films</a></li>
+        <li><a href="#play">Play</a></li>
         <li><a href="#studio">Studio</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -43,7 +44,7 @@
         <a class="btn ghost" href="#contact">Commission a story</a>
       </div>
       <div class="hero-meta">
-        <div><span class="label">Collections</span><b>4</b></div>
+        <div><span class="label">Chapters</span><b>5</b></div>
         <div><span class="label">Latest series</span><b>Liquid Chrome</b></div>
         <div><span class="label">Open for</span><b>Commissions 2027</b></div>
       </div>
@@ -111,6 +112,24 @@
         <p>Short AI films and fashion motion pieces, from seamless loops for social to 60-second campaign films.</p>
       </div>
       <div class="reel" data-chapter="films"></div>
+    </div>
+  </section>
+
+  <section class="chapter play-chapter" id="play">
+    <div class="wrap">
+      <div class="ch-head">
+        <div>
+          <span class="ch-num">Chapter V</span>
+          <h2>Interactive <i>/</i> Play the Chrome</h2>
+        </div>
+        <p>A surface of liquid metal that is also an instrument. Touch it and it rings like a bell; each note sends a wave through the chrome. Left to right climbs the scale, higher up rings brighter and longer. Drag to play a melody.</p>
+      </div>
+      <div class="instrument">
+        <canvas id="instrument" tabindex="0" aria-label="Interactive liquid chrome instrument. Tap or drag to play notes; keys A to semicolon also play."></canvas>
+        <span class="inst-note" id="inst-note" aria-hidden="true"></span>
+        <div class="inst-hint" id="inst-hint"><span class="label">Tap anywhere · sound on</span></div>
+        <div class="inst-scale" aria-hidden="true"><span>D3</span><span>D minor pentatonic</span><span>D6</span></div>
+      </div>
     </div>
   </section>
 
@@ -186,5 +205,6 @@
 <script src="config.js"></script>
 <script src="works.js"></script>
 <script src="app.js"></script>
+<script src="interactive.js"></script>
 </body>
 </html>
