@@ -60,7 +60,7 @@
   }
 
   // ---------- picture ----------
-  var gl = canvas.getContext('webgl', { antialias:false, premultipliedAlpha:false });
+  var gl = canvas.getContext('webgl', { antialias:false, premultipliedAlpha:false, powerPreference:'high-performance' });
   var MAX = 24;
   var ripples = []; // {x,y,t,a}
   var t0 = performance.now();
@@ -68,42 +68,33 @@
 
   if(gl){
     var vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    // Same liquid chrome as the hero. Each note pushes the metal outward with one smooth, low swell.
     var fs = [
-    'precision highp float;',
-    'uniform vec2 R;uniform float T;uniform vec4 RP['+MAX+'];',
-    'float h1(vec2 p){p=fract(p*vec2(443.897,441.423));p+=dot(p,p.yx+19.19);return fract((p.x+p.y)*p.x);}',
-    'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),f.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),f.x),f.y);}',
-    'float fbm(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<4;i++){v+=a*n(p);p=m*p+3.1;a*=.5;}return v;}',
-    'float field(vec2 p){',
-    '  vec2 L=vec2(cos(T*.07),sin(T*.07))*.6;',
-    '  vec2 q=vec2(fbm(p*.9+L),fbm(p*.9-L+5.2));',
-    '  float h=fbm(p*.9+2.*q)*.55;',
-    '  for(int i=0;i<'+MAX+';i++){',
-    '    vec4 r=RP[i]; float age=T-r.z; if(r.w<=0.||age<0.||age>6.)continue;',
-    '    vec2 d=p-r.xy; float dist=length(d); float front=age*.55;',
-    '    float env=exp(-age*.75)*exp(-pow((dist-front)*2.4,2.));',
-    '    h+=r.w*env*cos((dist-front)*22.)*.32;',
-    '    h+=r.w*exp(-age*2.)*exp(-dist*dist*30.)*.25;',   // the dimple where the finger lands
-    '  }',
-    '  return h;',
-    '}',
-    'vec3 env(vec3 d){float y=d.y;',
-    '  vec3 sky=vec3(.55,.58,.62);',
-    '  vec3 c=mix(vec3(.02,.022,.028)+sky*.06*smoothstep(-1.,-.1,y),sky*.5,smoothstep(-.07,.07,y))+sky*.5*smoothstep(0.,.9,y);',
-    '  c+=vec3(1.)*smoothstep(.2,.12,abs(d.x-.35))*smoothstep(-.1,.3,y)*2.1;',
-    '  c+=vec3(1.,.82,.55)*smoothstep(.07,.03,abs(d.x+.55))*smoothstep(-.5,.2,y)*1.6;',
-    '  return c;}',
-    'vec3 aces(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}',
-    'void main(){',
-    '  vec2 p=(gl_FragCoord.xy-.5*R)/R.y*1.6;',
-    '  float e=.004; float f=field(p);',
-    '  float fx=field(p+vec2(e,0.))-f, fy=field(p+vec2(0.,e))-f;',
-    '  vec3 N=normalize(vec3(-fx/e*.42,-fy/e*.42,1.));',
-    '  vec3 Rf=reflect(vec3(0.,0.,-1.),N);',
-    '  vec3 c=env(Rf)*(.6+.4*pow(1.-N.z,3.));',
-    '  vec2 uv=gl_FragCoord.xy/R; c*=mix(1.,smoothstep(1.2,.3,length((uv-.5)*vec2(R.x/R.y,1.))),.6);',
-    '  c=pow(aces(c*1.15),vec3(1./2.2));',
-    '  gl_FragColor=vec4(c,1.);}'
+    'precision highp float;uniform vec2 R;uniform float T;uniform vec4 RP['+MAX+'];',
+    'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
+    'return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}',
+    'float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}',
+    'void main(){vec2 uv=gl_FragCoord.xy/R;vec2 p=(gl_FragCoord.xy-.5*R)/R.y;',
+    'for(int i=0;i<'+MAX+';i++){vec4 r=RP[i];float age=T-r.z;if(r.w<=0.||age<0.||age>7.)continue;',
+    '  vec2 d=p-r.xy;float dist=length(d)+1e-4;float front=age*.38;',
+    '  float wave=exp(-age*.7)*exp(-pow((dist-front)*3.2,2.));',
+    '  float core=exp(-age*1.4)*exp(-dist*dist*14.);',
+    '  p-=d/dist*wave*r.w*.11+d*core*r.w*.55;}',
+    'float T2=T*.06;vec2 q=vec2(fbm(p*1.6+T2),fbm(p*1.6-T2+3.1));',
+    'vec2 w=vec2(fbm(p*1.4+2.*q+vec2(1.7,9.2)+T2*.7),fbm(p*1.4+2.*q+vec2(8.3,2.8)-T2*.5));',
+    'float f=fbm(p*1.2+2.4*w);',
+    'float e=.004;float fx=fbm((p+vec2(e,0.))*1.2+2.4*w)-f;float fy=fbm((p+vec2(0.,e))*1.2+2.4*w)-f;',
+    'vec3 N=normalize(vec3(-fx*90.,-fy*90.,1.));vec3 L=normalize(vec3(.5,.7,.6));',
+    'float dd=max(dot(N,L),0.);float s=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.),28.);',
+    'float bands=.5+.5*sin(f*14.+N.x*3.);',
+    'vec3 col=mix(vec3(.05,.055,.07),vec3(.78,.8,.83),bands*dd);',
+    'col+=s*vec3(1.,.97,.92);',
+    'col+=vec3(.72,.58,.35)*pow(1.-abs(N.z),3.)*.35;',
+    'float vig=smoothstep(1.35,.25,length((uv-.5)*vec2(R.x/R.y,1.)*.9));',
+    'col*=vig;',
+    'col+=(h(gl_FragCoord.xy+fract(T))-.5)/255.;',   // dither: no banding in the dark gradients
+    'gl_FragColor=vec4(col,1.);}'
     ].join('\n');
     function sh(type, src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
     var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr);
@@ -118,7 +109,7 @@
     var uR = gl.getUniformLocation(pr, 'R'), uT = gl.getUniformLocation(pr, 'T'), uRP = gl.getUniformLocation(pr, 'RP');
     var data = new Float32Array(MAX*4);
 
-    var scale = Math.min(window.devicePixelRatio || 1, 1.25) * (window.innerWidth < 700 ? .8 : 1);
+    var scale = Math.min(window.devicePixelRatio || 1, 2);   // full screen resolution, up to Retina
     function size(){ canvas.width = Math.round(canvas.clientWidth*scale); canvas.height = Math.round(canvas.clientHeight*scale); gl.viewport(0,0,canvas.width,canvas.height); }
     size(); addEventListener('resize', size);
 
@@ -128,7 +119,7 @@
     (function frame(){
       if(visible){
         var T = now();
-        ripples = ripples.filter(function(r){ return T - r.t < 6; });
+        ripples = ripples.filter(function(r){ return T - r.t < 7; });
         data.fill(0);
         ripples.slice(-MAX).forEach(function(r, i){ data[i*4]=r.x; data[i*4+1]=r.y; data[i*4+2]=r.t; data[i*4+3]=r.a; });
         gl.uniform2f(uR, canvas.width, canvas.height);
@@ -154,7 +145,7 @@
     play(n.midi, bright, x);
     // same coordinate space as the shader
     var aspect = r.width / r.height;
-    ripples.push({ x: (x - .5) * aspect * 1.6, y: (.5 - y) * 1.6, t: now(), a: .6 + bright*.6 });
+    ripples.push({ x: (x - .5) * aspect, y: (.5 - y), t: now(), a: .7 + bright*.5 });
     if(ripples.length > MAX) ripples.shift();
     noteLabel.textContent = n.name;
     noteLabel.style.left = (x*100) + '%'; noteLabel.style.top = (y*100) + '%';
