@@ -19,6 +19,8 @@
     return out;
   }
 
+  // Chapters whose images are shown without a title underneath (Mati's choice for Architecture).
+  var UNTITLED={architecture:true};
   function frame(w, i){
     var r=ratio(w.aspect);
     var media = w.video_url
@@ -28,7 +30,7 @@
       + '<button class="open" type="button" data-i="'+i+'" aria-label="Open '+esc(w.title)+'">'
       + '<div class="plate" style="--ar:'+esc(w.aspect||'4/5')+'">'+media
       + '</div></button>'
-      + '<figcaption><h3>'+esc(w.title)+'</h3></figcaption></figure>';
+      + (UNTITLED[w.chapter] ? '' : '<figcaption><h3>'+esc(w.title)+'</h3></figcaption>') + '</figure>';
   }
 
   var ALL=[];
@@ -64,8 +66,9 @@
     stage.innerHTML = w.video_url
       ? '<video src="'+esc(w.video_url)+'" poster="'+esc(w.image_url)+'" controls autoplay loop playsinline></video>'
       : '<img src="'+esc(w.image_url)+'" alt="'+esc(w.title)+'">';
-    document.getElementById('lb-title').textContent=w.title;
-    document.getElementById('lb-meta').textContent=[w.series,w.year,w.meta].filter(Boolean).join(' · ');
+    var bare=UNTITLED[w.chapter];
+    document.getElementById('lb-title').textContent=bare?'':w.title;
+    document.getElementById('lb-meta').textContent=bare?'':[w.series,w.year,w.meta].filter(Boolean).join(' · ');
     lb.hidden=false; document.body.style.overflow='hidden';
     document.getElementById('lb-close').focus();
   }

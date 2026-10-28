@@ -1,4 +1,4 @@
-# II — ONE
+# ll - one
 
 Web en inglés de arte digital, fotografía realista, editoriales de moda y videos cortos hechos con IA.
 
@@ -25,7 +25,7 @@ La web es estática: HTML, CSS y JavaScript, sin nada que instalar. Funciona con
 2. **Subir la imagen:** menú izquierdo **Storage**, carpeta `artworks`, botón **Upload file**. Conviene un JPG de unos 2400 px en el lado largo para la web. Guardá el original en alta resolución aparte.
 3. Hacé clic en el archivo subido y tocá **Get URL**. Copiá esa dirección.
 4. **Crear la ficha:** menú **Table Editor**, tabla `works`, botón **Insert row**. Completá:
-   - `chapter`: `digital-art`, `photography`, `editorial` o `films`
+   - `chapter`: `digital-art`, `architecture`, `photography`, `editorial` o `films`
    - `title`: el nombre de la obra
    - `series` y `year`: la serie y el año (opcional)
    - `meta`: el pie tipo claqueta, por ejemplo `4:5 · 4000×5000` o `85mm look`
