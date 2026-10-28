@@ -10,7 +10,8 @@
   // Group works into rows: wide pieces travel in pairs, tall ones in threes.
   function rows(list){
     var out=[], row=[], width=0;
-    list.forEach(function(w){
+    list.forEach(function(w, i){
+      if(i===0 && ratio(w.aspect)>=1.7){ out.push([w]); return; }   // a wide opening image gets the full width
       row.push(w); width+=ratio(w.aspect);
       if(width>=2.2 || row.length===3){ out.push(row); row=[]; width=0; }
     });
@@ -23,13 +24,11 @@
     var media = w.video_url
       ? '<video src="'+esc(w.video_url)+'" poster="'+esc(w.image_url)+'" muted loop playsinline autoplay preload="metadata"></video>'
       : '<img src="'+esc(w.image_url)+'" alt="'+esc(w.title)+'" loading="lazy" decoding="async">';
-    var label = [w.year, w.series].filter(Boolean).join(' · ');
     return '<figure class="frame" style="flex:'+r+' 1 0">'
       + '<button class="open" type="button" data-i="'+i+'" aria-label="Open '+esc(w.title)+'">'
       + '<div class="plate" style="--ar:'+esc(w.aspect||'4/5')+'">'+media
-      + (w.meta?'<div class="slot"><span>'+esc(w.series||'')+'</span><span>'+esc(w.meta)+'</span></div>':'')
       + '</div></button>'
-      + '<figcaption><h3>'+esc(w.title)+'</h3><span class="label">'+esc(label)+'</span></figcaption></figure>';
+      + '<figcaption><h3>'+esc(w.title)+'</h3></figcaption></figure>';
   }
 
   var ALL=[];
