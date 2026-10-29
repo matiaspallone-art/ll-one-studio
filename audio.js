@@ -44,6 +44,7 @@
 
   function play(name){
     if(muted) return;
+    if(window.LLONE_MUSIC) LLONE_MUSIC.duck();   // background music steps aside while you play
     if(!unlocked) unlock();
     var a = pool[next++ % POOL] || player();
     try{ a.pause(); }catch(e){}
