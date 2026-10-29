@@ -250,3 +250,8 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 .ink-bowl .sound-btn{background:rgba(3,3,4,.6);color:var(--ivory);border-color:rgba(246,242,234,.35)}
 .ink-bowl .sound-btn[aria-pressed="true"]{color:var(--gilt);border-color:var(--gilt)}
 .ink-bowl .sound-btn:hover{background:var(--ivory);color:#030304}
+/* phones: the headline spans the whole width, so darken the chrome evenly behind it */
+@media (max-width:700px){
+  .hero::after{background:linear-gradient(90deg,color-mix(in srgb,var(--night) 78%,transparent),color-mix(in srgb,var(--night) 55%,transparent)),
+                          linear-gradient(0deg,var(--night) 0%,transparent 30%)}
+}
