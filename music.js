@@ -1,12 +1,12 @@
-// Background music: "Seven Steps into the Deep" (made with Gemini, looped by crossfading its ending into its intro). Played with the Web Audio API so the loop is
+// Background music: "The Seventh Gate" (made with Gemini, looped by crossfading its ending into its intro). Played with the Web Audio API so the loop is
 // seamless: the file carries one extra second of the loop's end before its start and one of its start after
 // its end, so jumping from loopEnd back to loopStart lands on the same sound even if the decoder adds a few
 // milliseconds of silence at the beginning. Browsers forbid sound before the visitor touches the page, so the
 // music starts on the first tap, click or key press, or with the Music button. Turning it off is remembered.
 // It steps aside while an instrument (Play the Chrome, Oil & Water) or a video with sound is playing.
 (function(){
-  var SRC = 'assets/music/seven-steps-v1.mp3';
-  var LOOP = 160, PAD = 1;            // loop length and the margin on each side, in seconds
+  var SRC = 'assets/music/seventh-gate-v1.mp3';
+  var LOOP = 162, PAD = 1;            // loop length and the margin on each side, in seconds
   var LEVEL = 0.8, KEY = 'llone-music';
   var btn = document.getElementById('music');
   if(!btn || !(window.AudioContext || window.webkitAudioContext)){ if(btn) btn.hidden = true; return; }
