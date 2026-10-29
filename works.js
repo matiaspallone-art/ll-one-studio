@@ -21,6 +21,10 @@ window.LLONE_WORKS = [
   { chapter: 'editorial', title: 'Throne', series: 'Lunar', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/editorial/lunar-throne.jpg', aspect: '4/5', sort: 40 },
   { chapter: 'editorial', title: 'Dust', series: 'Lunar', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/editorial/lunar-dust.jpg', aspect: '4/5', sort: 50 },
   { chapter: 'editorial', title: 'Monolith', series: 'Lunar', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/editorial/lunar-monolith.jpg', aspect: '4/5', sort: 60 },
+  { chapter: 'editorial', title: 'Amber', series: 'Medusa', year: 2026, meta: '4:5 · 1024×1280', image_url: 'assets/editorial/medusa-amber.jpg', aspect: '4/5', sort: 70 },
+  { chapter: 'editorial', title: 'Coil', series: 'Medusa', year: 2026, meta: '4:5 · 1024×1280', image_url: 'assets/editorial/medusa-coil.jpg', aspect: '4/5', sort: 80 },
+  { chapter: 'editorial', title: 'Crown', series: 'Medusa', year: 2026, meta: '4:5 · 2048×2560', image_url: 'assets/editorial/medusa-crown.jpg', aspect: '4/5', sort: 90 },
+  { chapter: 'editorial', title: 'Gaze', series: 'Medusa', year: 2026, meta: '4:5 · 1024×1280', image_url: 'assets/editorial/medusa-gaze.jpg', aspect: '4/5', sort: 100 },
   { chapter: 'films', title: 'Liquid Chrome, in Motion', series: 'Liquid Chrome I', year: 2026, meta: 'Loop · 4K · 0:10', image_url: 'assets/art/chrome-4k-poster.jpg', video_url: 'assets/art/chrome-4k.mp4', aspect: '16/9', sort: 10 },
   { chapter: 'films', title: 'Argent Reel', series: 'Liquid Chrome I', year: 2026, meta: 'Reel · 9:16 · 0:08', image_url: 'assets/art/loop-reel-poster.jpg', video_url: 'assets/art/loop-reel.mp4', aspect: '9/16', sort: 20 },
 ];
