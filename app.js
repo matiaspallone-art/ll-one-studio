@@ -68,7 +68,7 @@
       : '<img src="'+esc(w.image_url)+'" alt="'+esc(w.title)+'">';
     var bare=UNTITLED[w.chapter];
     document.getElementById('lb-title').textContent=bare?'':w.title;
-    document.getElementById('lb-meta').textContent=bare?'':[w.series,w.year,w.meta].filter(Boolean).join(' · ');
+    document.getElementById('lb-meta').textContent='';   // name only, no technical data
     lb.hidden=false; document.body.style.overflow='hidden';
     document.getElementById('lb-close').focus();
   }
