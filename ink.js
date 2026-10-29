@@ -15,8 +15,8 @@
   notes = notes.slice(0, 16);                                             // D3 to E5
 
   function initAudio(){ if(window.LLONE_SOUND) LLONE_SOUND.unlock(); }
-  function pluck(midi, double){ if(window.LLONE_SOUND) LLONE_SOUND.play('drop-' + midi + '-' + (double ? 'double' : 'single')); }
-  if(window.LLONE_SOUND) LLONE_SOUND.preload(notes.reduce(function(a, n){ return a.concat(['drop-'+n.midi+'-single', 'drop-'+n.midi+'-double']); }, []));
+  function pluck(midi, double){ if(window.LLONE_SOUND) LLONE_SOUND.play('water-' + midi + '-' + (double ? 'double' : 'single')); }
+  if(window.LLONE_SOUND) LLONE_SOUND.preload(notes.reduce(function(a, n){ return a.concat(['water-'+n.midi+'-single', 'water-'+n.midi+'-double']); }, []));
 
   // ---------- fluid ----------
   var gl = canvas.getContext('webgl2', { alpha:false, depth:false, stencil:false, antialias:false, preserveDrawingBuffer:false });
@@ -74,8 +74,11 @@
   };
 
   var programs = {}, quad, velocity, dye, divergence, curlTex, pressure, simW, simH, dyeW, dyeH;
-  // oil is thick: velocity dies out fast (viscous), pigment barely fades
-  var CFG = { SIM: 160, DYE: window.innerWidth < 700 ? 768 : 1280, PRESSURE_ITER: 24, CURL: 6,
+  // oil is thick: velocity dies out fast (viscous), pigment barely fades.
+  // Highest quality the device can hold: phones get a lighter start, and if a device can't keep up
+  // in the first second, quality steps down once (see loop below).
+  var SMALL = window.innerWidth < 700 || matchMedia('(pointer:coarse)').matches;
+  var CFG = { SIM: SMALL ? 192 : 256, DYE: SMALL ? 1280 : 2048, PRESSURE_ITER: SMALL ? 28 : 36, CURL: 6,
     VEL_DISS: .9, DYE_DISS: .03, SPLAT_RADIUS: .0035, FORCE: 5200 };
 
   function compile(type, src){ var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
@@ -105,7 +108,8 @@
   }
   function res(base){
     var ar = canvas.width / canvas.height; if(ar < 1) ar = 1/ar;
-    var lo = Math.round(base), hi = Math.round(base * ar);
+    var max = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+    var lo = Math.round(base), hi = Math.min(max, Math.round(base * ar));
     return canvas.width > canvas.height ? { w: hi, h: lo } : { w: lo, h: hi };
   }
   function initTargets(){
@@ -123,7 +127,7 @@
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
-  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var DPR = Math.min(window.devicePixelRatio || 1, 3);   // full Retina sharpness, up to 3x phones
   function sizeCanvas(){
     var w = Math.round(canvas.clientWidth * DPR), h = Math.round(canvas.clientHeight * DPR);
     if(canvas.width === w && canvas.height === h) return false;
@@ -191,13 +195,27 @@
 
   if(gl){
     // the bowl is never empty: three drops already drifting when the page opens
-    splat(.3, .55, 220, -90, PRIMARY[0], .011);
-    splat(.52, .42, -60, 200, PRIMARY[1], .011);
-    splat(.72, .6, -230, -40, PRIMARY[2], .011);
-    var visible = true, last = performance.now();
+    function seed(){
+      splat(.3, .55, 220, -90, PRIMARY[0], .011);
+      splat(.52, .42, -60, 200, PRIMARY[1], .011);
+      splat(.72, .6, -230, -40, PRIMARY[2], .011);
+    }
+    seed();
+    var visible = true, last = performance.now(), probe = 0, probeTime = 0, tuned = false;
     if('IntersectionObserver' in window) new IntersectionObserver(function(en){ visible = en[0].isIntersecting; }).observe(canvas);
     (function loop(now){
-      var dt = Math.min((now - last) / 1000, 1/30); last = now;
+      var raw = now - last, dt = Math.min(raw / 1000, 1/30); last = now;
+      if(visible && !tuned){
+        // measure 60 frames; if the device averages under ~40 fps, step down once and start again
+        probe++; if(probe > 10) probeTime += raw;              // skip the first frames, they include page start-up
+        if(probe === 70){
+          tuned = true;
+          if(probeTime / 60 > 25){
+            CFG.DYE = Math.round(CFG.DYE * .625); CFG.SIM = Math.round(CFG.SIM * .75); CFG.PRESSURE_ITER = 20;
+            DPR = Math.min(DPR, 2); sizeCanvas(); initTargets(); seed();
+          }
+        }
+      }
       if(visible){
         pointers.forEach(function(p){ if(p.moved){ p.moved = false; splat(p.x, p.y, p.dx*CFG.FORCE, p.dy*CFG.FORCE, p.color.map(function(c){ return c*.15; })); } });
         step(dt); render();
