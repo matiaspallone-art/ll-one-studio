@@ -1,7 +1,7 @@
-// Chapter VI — "Ink & Silk": primary inks in water that mix like real paint, played like a guzheng.
+// Chapter VI — "Ink & Silk": thick primary oils on black that mix like real paint, played as falling water drops.
 // Fluid: stable-fluids solver on the GPU (WebGL2). Ink is stored as amounts of red, yellow and blue pigment
 // and shown through an RYB colour cube, so red + yellow becomes orange, yellow + blue green, blue + red violet.
-// Sound: Karplus-Strong plucked strings (pre-rendered to assets/sound) in the Chinese pentatonic, with a guzheng-style bend.
+// Sound: dense water drops (pre-rendered to assets/sound) in D Mixolydian; the top third of the canvas lets two more drops fall.
 (function(){
   var canvas = document.getElementById('ink');
   if(!canvas) return;
@@ -9,14 +9,14 @@
   var noteLabel = document.getElementById('ink-note');
 
   // ---------- sound ----------
-  var NAMES = ['D','E','F♯','A','B'], SEMI = [0,2,4,7,9];
+  var NAMES = ['D','E','F♯','G','A','B','C'], SEMI = [0,2,4,5,7,9,10];   // D Mixolydian
   var notes = [];
-  for(var o=0;o<3;o++) for(var k=0;k<5;k++) notes.push({ name: NAMES[k]+(3+o), midi: 50 + o*12 + SEMI[k] });
-  notes.push({ name:'D6', midi:86 });
+  for(var o=0;o<3;o++) for(var k=0;k<7;k++) notes.push({ name: NAMES[k]+(3+o), midi: 50 + o*12 + SEMI[k] });
+  notes = notes.slice(0, 16);                                             // D3 to E5
 
   function initAudio(){ if(window.LLONE_SOUND) LLONE_SOUND.unlock(); }
-  function pluck(midi, bend){ if(window.LLONE_SOUND) LLONE_SOUND.play('ink-' + midi + '-' + (bend ? 'bend' : 'plain')); }
-  if(window.LLONE_SOUND) LLONE_SOUND.preload(notes.reduce(function(a, n){ return a.concat(['ink-'+n.midi+'-plain', 'ink-'+n.midi+'-bend']); }, []));
+  function pluck(midi, double){ if(window.LLONE_SOUND) LLONE_SOUND.play('drop-' + midi + '-' + (double ? 'double' : 'single')); }
+  if(window.LLONE_SOUND) LLONE_SOUND.preload(notes.reduce(function(a, n){ return a.concat(['drop-'+n.midi+'-single', 'drop-'+n.midi+'-double']); }, []));
 
   // ---------- fluid ----------
   var gl = canvas.getContext('webgl2', { alpha:false, depth:false, stencil:false, antialias:false, preserveDrawingBuffer:false });
@@ -48,28 +48,35 @@
       'void main(){float L=texture(uPressure,vL).x,R=texture(uPressure,vR).x,T=texture(uPressure,vT).x,B=texture(uPressure,vB).x;' +
       'vec2 v=texture(uVelocity,vUv).xy-vec2(R-L,T-B);o=vec4(v,0.,1.);}',
     scale: HEAD + 'uniform sampler2D uTexture;uniform float value;void main(){o=value*texture(uTexture,vUv);}',
-    // pigment -> colour through the RYB cube (Gossett & Chen), then a wet sheen from the ink's own relief
+    // pigment -> colour through the RYB cube (Gossett & Chen) on a black ground, then lit as thick impasto oil
     display: HEAD + 'uniform sampler2D uDye;uniform vec2 dyeTexel;uniform float frame;' +
       'vec3 ryb(vec3 c){' +
-      ' vec3 W=vec3(.965,.949,.918),Rd=vec3(.86,.11,.13),Ye=vec3(.99,.83,.08),Bl=vec3(.09,.29,.71),' +
-      ' Or=vec3(.96,.45,.07),Vi=vec3(.42,.13,.52),Gr=vec3(.07,.6,.32),K=vec3(.16,.09,.06);' +
+      ' vec3 W=vec3(.012,.012,.016),Rd=vec3(1.,.03,.09),Ye=vec3(1.,.82,0.),Bl=vec3(0.,.28,1.),' +
+      ' Or=vec3(1.,.38,0.),Vi=vec3(.56,.05,.95),Gr=vec3(0.,.82,.3),K=vec3(.42,.17,.07);' +
       ' vec3 x0=mix(W,Rd,c.r),x1=mix(Ye,Or,c.r),x2=mix(Bl,Vi,c.r),x3=mix(Gr,K,c.r);' +
       ' return mix(mix(x0,x1,c.g),mix(x2,x3,c.g),c.b);}' +
       'float hh(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}' +
-      'void main(){vec3 d=texture(uDye,vUv).rgb;vec3 a=1.-exp(-max(d,0.)*1.7);' +
-      ' vec3 col=ryb(a);' +
-      ' float h0=dot(a,vec3(1.)),hx=dot(1.-exp(-max(texture(uDye,vUv+vec2(dyeTexel.x,0.)).rgb,0.)*1.7),vec3(1.))-h0,' +
-      ' hy=dot(1.-exp(-max(texture(uDye,vUv+vec2(0.,dyeTexel.y)).rgb,0.)*1.7),vec3(1.))-h0;' +
-      ' vec3 N=normalize(vec3(-hx*9.,-hy*9.,1.));vec3 L=normalize(vec3(-.4,.6,.7));' +
-      ' float spec=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.),40.)*smoothstep(0.,.3,h0);' +
-      ' col=col*(.9+.1*dot(N,L))+spec*.35;' +
+      'float H(vec2 uv){vec3 a=1.-exp(-max(texture(uDye,uv).rgb,0.)*2.6);return dot(a,vec3(1.));}' +
+      'void main(){vec3 d=texture(uDye,vUv).rgb;vec3 a=1.-exp(-max(d,0.)*2.6);' +
+      ' float m=max(a.r,max(a.g,a.b));' +
+      ' vec3 hue=a/max(m,1e-4);' +                                   // the mix of pigments, at full strength
+      ' vec3 col=mix(ryb(vec3(0.)),ryb(hue),smoothstep(.02,.32,m));' +   // opaque paint: crisp edge onto black
+      ' float h0=H(vUv),e=1.5;' +
+      ' float hx=H(vUv+vec2(dyeTexel.x*e,0.))-H(vUv-vec2(dyeTexel.x*e,0.)),hy=H(vUv+vec2(0.,dyeTexel.y*e))-H(vUv-vec2(0.,dyeTexel.y*e));' +
+      ' vec3 N=normalize(vec3(-hx*14.,-hy*14.,1.));vec3 L=normalize(vec3(-.45,.6,.65));' +
+      ' float cover=smoothstep(0.,.35,h0);' +
+      ' float dif=.62+.5*max(dot(N,L),0.);' +
+      ' float spec=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.),70.)*cover;' +
+      ' float rim=pow(1.-N.z,1.5)*cover;' +
+      ' col=col*mix(1.,dif,cover)*(1.+.15*rim)+spec*vec3(1.,.97,.92)*.55;' +
       ' col+=(hh(gl_FragCoord.xy+frame)-.5)/255.;' +
       ' o=vec4(col,1.);}'
   };
 
   var programs = {}, quad, velocity, dye, divergence, curlTex, pressure, simW, simH, dyeW, dyeH;
-  var CFG = { SIM: 160, DYE: window.innerWidth < 700 ? 768 : 1280, PRESSURE_ITER: 24, CURL: 9,
-    VEL_DISS: .25, DYE_DISS: .09, SPLAT_RADIUS: .0035, FORCE: 5200 };
+  // oil is thick: velocity dies out fast (viscous), pigment barely fades
+  var CFG = { SIM: 160, DYE: window.innerWidth < 700 ? 768 : 1280, PRESSURE_ITER: 24, CURL: 6,
+    VEL_DISS: .9, DYE_DISS: .03, SPLAT_RADIUS: .0035, FORCE: 5200 };
 
   function compile(type, src){ var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
     if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
@@ -207,9 +214,9 @@
     p.cell = cell;
     var n = notes[cell];
     pluck(n.midi, y < .33, x);
-    noteLabel.textContent = n.name + (y < .33 ? ' ↗' : '');
+    noteLabel.textContent = n.name;
     noteLabel.style.left = (x*100) + '%'; noteLabel.style.top = (y*100) + '%';
-    noteLabel.style.color = ['#e0242c','#f5b80e','#2257c2'][p.ink];
+    noteLabel.style.color = ['#ff2a3d','#ffd21a','#3a7bff'][p.ink];
     noteLabel.classList.remove('show'); void noteLabel.offsetWidth; noteLabel.classList.add('show');
   }
   canvas.addEventListener('pointerdown', function(e){
@@ -224,7 +231,7 @@
     }
     noteAt(q.x, q.y, e.pointerId, true, p);
     if(hint) hint.classList.add('gone');
-    canvas.setAttribute('aria-label', 'Interactive ink instrument. Last drop: ' + PRIMARY_NAMES[ink] + ' ink.');
+    canvas.setAttribute('aria-label', 'Interactive paint instrument. Last drop: ' + PRIMARY_NAMES[ink] + ' paint.');
   });
   canvas.addEventListener('pointermove', function(e){
     var p = pointers.get(e.pointerId); if(!p) return;

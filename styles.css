@@ -238,14 +238,14 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 @keyframes note{0%{opacity:0;transform:translate(-50%,-120%)}12%{opacity:1}100%{opacity:0;transform:translate(-50%,-260%)}}
 @media (prefers-reduced-motion:reduce){.inst-note.show{animation:none;opacity:1}}
 
-/* Chapter VI: ink bowl on rice paper */
-.ink-bowl{background:#f6f2ea}
-.ink-bowl .inst-scale{color:rgba(40,30,20,.6)}
-.ink-bowl .inst-hint .label{color:#2a211a;border-color:rgba(40,30,20,.35);background:rgba(246,242,234,.55)}
-.ink-bowl .inst-note{text-shadow:0 1px 10px rgba(246,242,234,.9)}
-.ink-fallback{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:var(--s2);text-align:center;color:#2a211a}
+/* Chapter VI: thick oils on a black ground */
+.ink-bowl{background:#030304}
+.ink-bowl .inst-scale{color:rgba(246,242,234,.55)}
+.ink-bowl .inst-hint .label{color:var(--ivory);border-color:rgba(246,242,234,.3);background:rgba(3,3,4,.55)}
+.ink-bowl .inst-note{text-shadow:0 1px 12px rgba(0,0,0,.8)}
+.ink-fallback{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:var(--s2);text-align:center;color:var(--ivory)}
 .sound-btn{position:absolute;top:.8rem;right:.8rem;z-index:3;padding:.55rem .9rem;font-size:.68rem;background:color-mix(in srgb,var(--night) 55%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .sound-btn[aria-pressed="true"]{border-color:var(--gilt);color:var(--gilt)}
-.ink-bowl .sound-btn{background:rgba(246,242,234,.7);color:#2a211a;border-color:rgba(40,30,20,.45)}
-.ink-bowl .sound-btn[aria-pressed="true"]{color:#8a5a14;border-color:#8a5a14}
-.ink-bowl .sound-btn:hover{background:#2a211a;color:#f6f2ea}
+.ink-bowl .sound-btn{background:rgba(3,3,4,.6);color:var(--ivory);border-color:rgba(246,242,234,.35)}
+.ink-bowl .sound-btn[aria-pressed="true"]{color:var(--gilt);border-color:var(--gilt)}
+.ink-bowl .sound-btn:hover{background:var(--ivory);color:#030304}
