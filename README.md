@@ -19,7 +19,7 @@ La web es estática: HTML, CSS y JavaScript, sin nada que instalar. Funciona con
 | `works.js` | Copia de respaldo de las obras, por si Supabase no responde. |
 | `assets/art/` | Imágenes y videos de la serie Liquid Chrome en versión web. |
 | `music.js` | La música de fondo y el botón **Music on / off** de arriba a la derecha. |
-| `assets/music/` | El tema "Undertow" (loop de 2:05). Si lo cambiás, usá un nombre nuevo (por ejemplo `undertow-v2.mp3`) y actualizalo en `music.js`, porque Vercel guarda en caché los archivos de `assets/`. |
+| `assets/music/` | El tema "Seven Steps into the Deep", hecho con Gemini (loop de 2:40). Si lo cambiás, usá un nombre nuevo (por ejemplo `seven-steps-v2.mp3`), ajustá `LOOP` con la duración del loop y actualizalo en `music.js`, porque Vercel guarda en caché los archivos de `assets/`. |
 
 ## Agregar una obra nueva (sin tocar código)
 
