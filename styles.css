@@ -169,6 +169,7 @@ section.chapter{padding-block:var(--s5) var(--s4);border-bottom:1px solid var(--
 
 footer{border-top:1px solid var(--line)}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s0);padding-block:var(--s2)}
+footer .rights{flex-basis:100%;margin:0;font-size:.72rem;line-height:1.5;letter-spacing:.02em;color:color-mix(in srgb,var(--ivory) 45%,var(--night))}
 
 /* responsive */
 @media (max-width:900px){
