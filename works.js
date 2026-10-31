@@ -7,6 +7,7 @@ window.LLONE_WORKS = [
   { chapter: 'digital-art', title: 'Glaciar', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-glaciar.jpg', aspect: '4/5', sort: 140 },
   { chapter: 'digital-art', title: 'Iguazú', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-iguazu.jpg', aspect: '4/5', sort: 150 },
   { chapter: 'digital-art', title: 'Patagonia', series: 'Quiet Latitudes', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/art/quiet-latitudes-patagonia.jpg', aspect: '16/9', sort: 160 },
+  { chapter: 'films', title: 'The Audience', series: 'Films', year: 2026, meta: 'Short film · 1080p · 0:18', image_url: 'assets/films/the-audience-poster-v1.jpg', video_url: 'assets/films/the-audience-v1.mp4', aspect: '16/9', sort: 10 },
   { chapter: 'architecture', title: 'Exterior', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-exterior.jpg', aspect: '16/9', sort: 10 },
   { chapter: 'architecture', title: 'Living', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-living.jpg', aspect: '16/9', sort: 20 },
   { chapter: 'architecture', title: 'Kitchen', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-kitchen.jpg', aspect: '16/9', sort: 30 },
@@ -25,6 +26,4 @@ window.LLONE_WORKS = [
   { chapter: 'editorial', title: 'Coil', series: 'Medusa', year: 2026, meta: '4:5 · 1024×1280', image_url: 'assets/editorial/medusa-coil.jpg', aspect: '4/5', sort: 80 },
   { chapter: 'editorial', title: 'Crown', series: 'Medusa', year: 2026, meta: '4:5 · 2048×2560', image_url: 'assets/editorial/medusa-crown.jpg', aspect: '4/5', sort: 90 },
   { chapter: 'editorial', title: 'Gaze', series: 'Medusa', year: 2026, meta: '4:5 · 1024×1280', image_url: 'assets/editorial/medusa-gaze.jpg', aspect: '4/5', sort: 100 },
-  { chapter: 'films', title: 'Liquid Chrome, in Motion', series: 'Liquid Chrome I', year: 2026, meta: 'Loop · 4K · 0:10', image_url: 'assets/art/chrome-4k-poster.jpg', video_url: 'assets/art/chrome-4k.mp4', aspect: '16/9', sort: 10 },
-  { chapter: 'films', title: 'Argent Reel', series: 'Liquid Chrome I', year: 2026, meta: 'Reel · 9:16 · 0:08', image_url: 'assets/art/loop-reel-poster.jpg', video_url: 'assets/art/loop-reel.mp4', aspect: '9/16', sort: 20 },
 ];
