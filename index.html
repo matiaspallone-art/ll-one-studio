@@ -28,6 +28,7 @@
         <li><a href="#films">Films</a></li>
         <li><a href="#play">Play</a></li>
         <li><a href="#ink-play">Oil</a></li>
+        <li><a href="#resonance-play">Resonance</a></li>
         <li><a href="#studio">Studio</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -160,6 +161,23 @@
     </div>
   </section>
 
+  <section class="chapter" id="resonance-play">
+    <div class="wrap">
+      <div class="ch-head">
+        <div>
+          <h2>Interactive <i>/</i> Resonance</h2>
+        </div>
+        <p>Golden sand on a ringing plate. Every note draws its own figure.</p>
+      </div>
+      <div class="instrument res-plate">
+        <canvas id="resonance" tabindex="0" aria-label="Interactive sand plate. Tap or hold to play notes, low on the left and high on the right; keys A to semicolon and Q to P also play. Each note arranges the sand into its own figure."></canvas>
+        <span class="res-note" id="res-note" aria-hidden="true"></span>
+        <div class="inst-hint" id="res-hint"><span class="label">Tap or hold · sound on</span></div>
+        <p class="ink-fallback" id="res-fallback" hidden>This piece needs a browser with WebGL 2. Try the latest Safari, Chrome or Firefox.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="process" aria-labelledby="process-title" hidden>
     <div class="wrap">
       <span class="label">How a piece is made</span>
@@ -228,5 +246,6 @@
 <script src="app.js"></script>
 <script src="interactive.js"></script>
 <script src="ink.js"></script>
+<script src="resonance.js"></script>
 </body>
 </html>
