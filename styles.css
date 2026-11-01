@@ -244,7 +244,8 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 .instrument{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%,#3a3d45 0%,#15161b 55%,var(--night) 85%);border:1px solid var(--line)}
 @media (max-width:700px){.instrument{aspect-ratio:3/4}}
 #instrument,#ink{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
-#instrument:focus-visible,#ink:focus-visible{outline:1px solid var(--gilt);outline-offset:-1px}
+#resonance{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
+#instrument:focus-visible,#ink:focus-visible,#resonance:focus-visible{outline:1px solid var(--gilt);outline-offset:-1px}
 .inst-hint{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;transition:opacity .8s}
 .inst-hint .label{padding:.7rem 1.1rem;border:1px solid color-mix(in srgb,var(--ivory) 45%,transparent);color:var(--ivory);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);background:color-mix(in srgb,var(--night) 35%,transparent)}
 .inst-hint.gone{opacity:0}
@@ -270,3 +271,9 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
   .hero::after{background:linear-gradient(90deg,color-mix(in srgb,var(--night) 78%,transparent),color-mix(in srgb,var(--night) 55%,transparent)),
                           linear-gradient(0deg,var(--night) 0%,transparent 30%)}
 }
+
+/* Chapter VII: Resonance (sand plate) */
+.res-plate{background:#07080a}
+.res-note{position:absolute;top:.9rem;left:1rem;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.14em;color:var(--gilt);pointer-events:none;opacity:0;transition:opacity .25s}
+.res-note.on{opacity:.9}
+.res-plate .inst-hint .label{background:rgba(7,8,10,.55)}
