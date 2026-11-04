@@ -277,3 +277,7 @@ form.inquiry .send{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s0)}
 .res-note{position:absolute;top:.9rem;left:1rem;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.14em;color:var(--gilt);pointer-events:none;opacity:0;transition:opacity .25s}
 .res-note.on{opacity:.9}
 .res-plate .inst-hint .label{background:rgba(7,8,10,.55)}
+
+/* Sound / Motion: vertical pieces stay at a comfortable size, centred */
+#sound-motion .reel.justified .row{justify-content:center}
+#sound-motion .reel.justified .frame{max-width:min(420px,100%)}
