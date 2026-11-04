@@ -35,6 +35,9 @@
 
   var ALL=[];
   function render(works){
+    // The database only knows the original chapters, so pieces of the "Sound / Motion" series
+    // are stored as films and shown in their own section here.
+    works = works.map(function(w){ return w.series==='Sound / Motion' ? Object.assign({}, w, {chapter:'sound-motion'}) : w; });
     ALL = works.slice().sort(function(a,b){return (a.sort||0)-(b.sort||0);});
     document.querySelectorAll('.reel[data-chapter]').forEach(function(reel){
       var ch=reel.getAttribute('data-chapter');
