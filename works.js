@@ -7,6 +7,7 @@ window.LLONE_WORKS = [
   { chapter: 'digital-art', title: 'Glaciar', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-glaciar.jpg', aspect: '4/5', sort: 140 },
   { chapter: 'digital-art', title: 'Iguazú', series: 'Quiet Latitudes', year: 2026, meta: '4:5 · 4096×5120', image_url: 'assets/art/quiet-latitudes-iguazu.jpg', aspect: '4/5', sort: 150 },
   { chapter: 'digital-art', title: 'Patagonia', series: 'Quiet Latitudes', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/art/quiet-latitudes-patagonia.jpg', aspect: '16/9', sort: 160 },
+  { chapter: 'films', title: 'Sonic Sphere', series: 'Films', year: 2026, meta: 'Reel · 9:16 · 0:21', image_url: 'assets/films/sonic-sphere-poster-v1.jpg', video_url: 'assets/films/sonic-sphere-v1.mp4', aspect: '9/16', sort: 3 },
   { chapter: 'films', title: 'The Audience', series: 'Films', year: 2026, meta: 'Short film · 1080p · 0:18', image_url: 'assets/films/the-audience-poster-v1.jpg', video_url: 'assets/films/the-audience-v1.mp4', aspect: '16/9', sort: 10 },
   { chapter: 'architecture', title: 'Exterior', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-exterior.jpg', aspect: '16/9', sort: 10 },
   { chapter: 'architecture', title: 'Living', series: 'Mars Mycelium', year: 2026, meta: '16:9 · 6144×3456', image_url: 'assets/architecture/mars-mycelium-living.jpg', aspect: '16/9', sort: 20 },
